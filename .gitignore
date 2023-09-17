@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 *.csv
+*.js
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -83,7 +84,6 @@ web_modules/
 .env.local
 package-lock.json
 config.json
-.csv
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
