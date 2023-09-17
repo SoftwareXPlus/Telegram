@@ -2,15 +2,16 @@
     "name": "telegram",
     "description": "",
     "version": "1.0.0",
-    "main": "out/index.js",
+    "main": "out/src/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@types/node": "^20.6.2",
         "axios": "^1.5.0",
-        "nodemon": "^3.0.1",
-        "telegraf": "^4.12.2"
+        "fs": "0.0.1-security",
+        "telegraf": "^4.13.1"
     }
 }
