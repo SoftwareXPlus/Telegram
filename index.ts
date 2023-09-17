@@ -105,17 +105,17 @@ bot.command("showticket", (ctx) => {
 })
 
 bot.on("callback_query", (ctx: any) => {
-    const c = database(ctx)
-    const x = c.find((xf) => xf.name.split(".").shift() === ctx.callbackQuery.data)
     try {
+        const c = database(ctx)
+        const x = c.find((xf) => xf.name.split(".").shift() === ctx.callbackQuery.data)
         if (x) {
-            const xc = `${String(x.path)}/${String(x.name)}`
-            const xf = require(xc)
-            console.log(xf)
+            const xf = require(`${String(x.path)}/${String(x.name)}`)
+            ctx.reply(xf.toString)
         } else {
             ctx.reply("No ticket found")
         }
     } catch (error) {
+        ctx.reply("An Unknown Error happen to fetching tickets")
         console.log(error)
     }
 })
