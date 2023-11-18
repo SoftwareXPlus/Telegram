@@ -1,35 +1,28 @@
-import { Context, Markup, Telegraf } from "telegraf"
+import { Telegraf } from "telegraf"
 import { message } from "telegraf/filters"
+import { QuickDB } from "quick.db"
 import config from "./config.json"
 import Payload from "./payload"
-import { post } from "axios"
-import fs from "node:fs"
+import "node-fetch"
 
 const bot = new Telegraf(config.token)
+const db = new QuickDB()
 bot.launch()
 
-async function SendWebhook(payload: Payload) {
-    post(config.webhook, payload)
+function SendWebhook(payload: Payload) {
+    fetch(config.webhook, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
         .then((x) => {
             if (x.status !== 204) {
-                console.error("Failed to send webhook message. Status:", x.status)
-                console.error("Response data:", x.data)
+                console.log("Failed to send webhook message. Status:", x.status)
             }
         })
-        .catch(console.log)
-}
-
-function database(ctx: Context) {
-    try {
-        const directory = `./database/ticket/${ctx.from.id}`
-        return fs.readdirSync(directory, { withFileTypes: true })
-    } catch (error: any) {
-        if (error.message.startsWith("ENOENT: no such file or directory")) {
-            ctx.reply("You don't have any ticket")
-        } else {
-            console.log(error)
-        }
-    }
+        .catch(console.trace)
 }
 
 bot.on(message("text"), (ctx, next) => {
@@ -52,75 +45,46 @@ bot.on(message("text"), (ctx, next) => {
     next()
 })
 
+bot.start((ctx) =>
+    ctx.reply(
+        "This bot is in development. Check out development status on [Github](https://github.com/softwarexplus/Telegram)",
+        { parse_mode: "Markdown" }
+    )
+)
+
 bot.help((ctx) => {
-    ctx.reply(
-        `Available commands:\n/addticket - Add a new ticket to the system\n/showticket - Show list of all tickets in the system\n/other - Link of our other social media`
-    )
+    // if (ctx.message.chat.type !== "private") return
+    // ctx.reply(
+    //     "Welcome to SoftwareX Plus bot. This bot is in development Check out our social media pages:",
+    //     Markup.inlineKeyboard([
+    //         [{ text: "SoftwareX Plus Discord", url: "https://dsc.gg/SoftwareXPlus" }],
+    //         [{ text: "SoftwareX Plus YouTube", url: "https://www.youtube.com/@SoftwareXPlus" }],
+    //         [{ text: "Floating Sandbox YouTube", url: "https://www.youtube.com/@FloatingSandbox" }],
+    //         [{ text: "SoftwareX Plus Twitter", url: "https://twitter.com/SoftwareXPlus" }],
+    //         [{ text: "SoftwareX Plus GitHub", url: "https://github.com/SoftwareXPlus" }],
+    //         [{ text: "Floating Sandbox Facebook", url: "https://www.facebook.com/FloatingSandbox" }]
+    //     ])
+    // )
 })
 
-bot.command("other", (ctx) => {
-    if (ctx.message.chat.type !== "private") return
-    ctx.reply(
-        "Check out our social media pages:",
-        Markup.inlineKeyboard([
-            [{ text: "SoftwareX Plus Discord", url: "https://dsc.gg/SoftwareXPlus" }],
-            [{ text: "SoftwareX Plus YouTube", url: "https://www.youtube.com/@SoftwareXPlus" }],
-            [{ text: "Floating Sandbox YouTube", url: "https://www.youtube.com/@FloatingSandbox" }],
-            [{ text: "SoftwareX Plus Twitter", url: "https://twitter.com/SoftwareXPlus" }],
-            [{ text: "SoftwareX Plus GitHub", url: "https://github.com/SoftwareXPlus" }],
-            [{ text: "Floating Sandbox Facebook", url: "https://www.facebook.com/FloatingSandbox" }]
-        ])
-    )
+bot.command("config", (ctx) => {
+    // if (ctx.message.from.id !== 1288318509) return ctx.reply("An unknown error happen")
+    // ctx.reply(
+    //     "Config Option",
+    //     Markup.inlineKeyboard([
+    //         [
+    //             Markup.button.callback("Add Moderator", "add-moderator"),
+    //             Markup.button.callback("Remove Moderator", "remove-moderator")
+    //         ],
+    //         [
+    //             Markup.button.callback("Add Support", "add-support"),
+    //             Markup.button.callback("Remove Support", "remove-support")
+    //         ]
+    //     ])
+    // )
 })
 
-bot.command("addticket", async (ctx) => {
-    ctx.reply(`What is your questions ?`)
-    bot.on(message("text"), (collect) => {
-        const object = {
-            User: collect.message.from.id,
-            Message: collect.message.text,
-            Time: new Date()
-        }
-        fs.mkdirSync(`./database/ticket/${ctx.from.id}`, { recursive: true })
-        fs.writeFileSync(`./database/ticket/${ctx.from.id}/${new Date().getTime()}.json`, JSON.stringify(object))
-        return collect.sendMessage("Collected")
-    })
-    setTimeout(() => {
-        return ctx.reply("Time up")
-    }, 20000)
-})
-
-bot.command("showticket", (ctx) => {
-    let keyboard = []
-    let f = []
-    const c = database(ctx)
-
-    for (const x of c) {
-        f.push(x.name.replace(/\\/g, "/").split("/").pop().split(".").shift())
-    }
-    for (const x of f) {
-        keyboard.push([Markup.button.callback(String(new Date(Number(x))), x)])
-    }
-    ctx.reply("Here is the list of all your tickets", Markup.inlineKeyboard(keyboard))
-})
-
-bot.on("callback_query", (ctx: any) => {
-    try {
-        const c = database(ctx)
-        const x = c.find((xf) => xf.name.split(".").shift() === ctx.callbackQuery.data)
-        if (x) {
-            const xf = require(`${String(x.path)}/${String(x.name)}`)
-            ctx.reply(xf.toString)
-        } else {
-            ctx.reply("No ticket found")
-        }
-    } catch (error) {
-        ctx.reply("An Unknown Error happen to fetching tickets")
-        console.log(error)
-    }
-})
-
-process.on("multipleResolves", () => console.log)
-process.on("uncaughtException", () => console.log)
-process.on("unhandledRejection", () => console.log)
-process.on("uncaughtExceptionMonitor", () => console.log)
+process.on("multipleResolves", () => console.trace)
+process.on("uncaughtException", () => console.trace)
+process.on("unhandledRejection", () => console.trace)
+process.on("uncaughtExceptionMonitor", () => console.trace)
