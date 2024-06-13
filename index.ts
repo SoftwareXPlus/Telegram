@@ -52,39 +52,7 @@ bot.start((ctx) =>
     )
 )
 
-bot.help((ctx) => {
-    // if (ctx.message.chat.type !== "private") return
-    // ctx.reply(
-    //     "Welcome to SoftwareX Plus bot. This bot is in development Check out our social media pages:",
-    //     Markup.inlineKeyboard([
-    //         [{ text: "SoftwareX Plus Discord", url: "https://dsc.gg/SoftwareXPlus" }],
-    //         [{ text: "SoftwareX Plus YouTube", url: "https://www.youtube.com/@SoftwareXPlus" }],
-    //         [{ text: "Floating Sandbox YouTube", url: "https://www.youtube.com/@FloatingSandbox" }],
-    //         [{ text: "SoftwareX Plus Twitter", url: "https://twitter.com/SoftwareXPlus" }],
-    //         [{ text: "SoftwareX Plus GitHub", url: "https://github.com/SoftwareXPlus" }],
-    //         [{ text: "Floating Sandbox Facebook", url: "https://www.facebook.com/FloatingSandbox" }]
-    //     ])
-    // )
-})
-
-bot.command("config", (ctx) => {
-    // if (ctx.message.from.id !== 1288318509) return ctx.reply("An unknown error happen")
-    // ctx.reply(
-    //     "Config Option",
-    //     Markup.inlineKeyboard([
-    //         [
-    //             Markup.button.callback("Add Moderator", "add-moderator"),
-    //             Markup.button.callback("Remove Moderator", "remove-moderator")
-    //         ],
-    //         [
-    //             Markup.button.callback("Add Support", "add-support"),
-    //             Markup.button.callback("Remove Support", "remove-support")
-    //         ]
-    //     ])
-    // )
-})
-
-process.on("multipleResolves", () => console.trace)
-process.on("uncaughtException", () => console.trace)
-process.on("unhandledRejection", () => console.trace)
-process.on("uncaughtExceptionMonitor", () => console.trace)
+process.on("multipleResolves", console.trace)
+process.on("uncaughtException", console.trace)
+process.on("unhandledRejection", console.trace)
+process.on("uncaughtExceptionMonitor", console.trace)
