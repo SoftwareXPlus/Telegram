@@ -6,8 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-*.csv
-*.js
+*.zip
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -42,8 +41,8 @@ build/Release
 
 # Dependency directories
 node_modules/
-database/
 jspm_packages/
+log/
 .vscode/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -82,9 +81,11 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+pnpm-lock.yaml
 package-lock.json
-config.json
-json.sqlite
+config.*.json
+*.js
+*.csv
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

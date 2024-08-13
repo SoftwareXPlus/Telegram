@@ -3,32 +3,24 @@
     "description": "",
     "version": "1.0.0",
     "main": "index.js",
+    "type": "commonjs",
+    "author": "SoftwareX Plus",
+    "license": "MIT",
     "scripts": {
-        "dev": "nodemon",
-        "start": "node .",
-        "test": "echo To test this bot run \"pnpm dev\""
+        "lint": "prettier --config=.prettierrc --write src/",
+        "lint-test": "prettier --config=.prettierrc --check src/",
+        "test": "nodemon --ext .ts,.cts,.mts,.json --watch src --exec tsc --noEmit",
+        "dev": "nodemon --ext .ts,.cts,.mts,.json --watch src --exec ts-nod src/index.ts",
+        "build": "esbuild src/index.ts --bundle --outfile=index.js --platform=node --packages=external",
+        "start": "node index.js"
     },
-    "author": "",
-    "license": "ISC",
     "dependencies": {
-        "better-sqlite3": "^8.6.0",
-        "node-fetch": "^3.3.2",
-        "quick.db": "^9.1.7",
+        "postgres": "^3.4.4",
         "telegraf": "^4.13.1"
     },
     "devDependencies": {
-        "@types/node": "^20.9.1",
-        "typescript": "^5.2.2"
-    },
-    "prettier": {
-        "trailingComma": "none",
-        "semi": false,
-        "singleQuote": false,
-        "tabWidth": 4,
-        "printWidth": 120
-    },
-    "nodemonConfig": {
-        "ext": ".ts, .json",
-        "exec": "tsx index.ts"
+        "@types/node": "^22.0.0",
+        "esbuild": "^0.23.0",
+        "prettier": "^3.3.3"
     }
 }

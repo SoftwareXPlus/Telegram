@@ -1,12 +1,9 @@
 import { Telegraf } from "telegraf"
 import { message } from "telegraf/filters"
-import { QuickDB } from "quick.db"
-import config from "./config.json"
 import Payload from "./payload"
-import "node-fetch"
 
+const config = {} as any
 const bot = new Telegraf(config.token)
-const db = new QuickDB()
 bot.launch()
 
 function SendWebhook(payload: Payload) {
